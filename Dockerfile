@@ -1,7 +1,5 @@
 FROM dylanlindgren/docker-laravel-nginx
 
-COPY . .
-
 # Image config
 ENV SKIP_COMPOSER 1
 ENV WEBROOT /var/www/html/public
