@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -54,16 +55,12 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        $user->assignRole('participant');
+        event(new Registered($user));
 
-        $token = Auth::login($user);
         return response()->json([
             'status' => 'success',
-            'message' => 'User created successfully',
-            'user' => $user,
-            'authorization' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
+            'message' => 'Conta criada com sucesso! Acesse seu email e clique no link de confirmação para ativar sua conta.',
         ]);
     }
 
@@ -72,7 +69,7 @@ class AuthController extends Controller
         Auth::logout();
         return response()->json([
             'status' => 'success',
-            'message' => 'Successfully logged out',
+            'message' => 'Você foi desconectado!',
         ]);
     }
 
